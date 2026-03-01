@@ -412,3 +412,4 @@ body.wf #game{
   .wf-hud-box:nth-child(3n){ border-right:none; }
   .wf-canvasWrap{ height:calc(100dvh - 250px); }
 }
+.wf-hud{ display:grid !important; }
