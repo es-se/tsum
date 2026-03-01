@@ -3,65 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>もどきムズムズ v2.3 mobile | BUILD 20260228-230000</title>
+  <title>ツムツムv2.4 | BUILD 20260301-152500</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <header class="topbar">
-    <div class="title">
-      <div class="logo">🌌</div>
-      <div>
-        <div class="name">もどきムズムズ v2.3</div>
-        <div class="sub">スマホ優先レイアウト / BUILD 20260228-230000</div>
+<body class="wf">
+
+  <header class="topbar wf-topbar">
+    <div class="wf-title">ツムツムv2.4</div>
+
+    <div class="wf-hud">
+      <div class="wf-hud-label">スコア</div>
+      <div class="wf-hud-label">ハイスコア</div>
+      <div class="wf-hud-label">コンボ</div>
+      <div class="wf-hud-label">倍率</div>
+      <div class="wf-hud-label">残り</div>
+      <div class="wf-hud-label">フィーバー</div>
+
+      <div class="wf-hud-box" id="score">0</div>
+      <div class="wf-hud-box" id="hiscore">0</div>
+      <div class="wf-hud-box" id="combo">0</div>
+      <div class="wf-hud-box"><span id="mult">x1.00</span></div>
+      <div class="wf-hud-box"><span id="time">60.0</span>s</div>
+      <div class="wf-hud-box">
+        <div class="wf-fever">
+          <div class="wf-fever-fill" id="feverFill"></div>
+        </div>
       </div>
     </div>
 
-    <div class="hud">
-      <div class="hudbox"><div class="label">スコア</div><div class="value" id="score">0</div></div>
-      <div class="hudbox"><div class="label">ハイスコア</div><div class="value" id="hiscore">0</div></div>
-      <div class="hudbox"><div class="label">コンボ</div><div class="value" id="combo">0</div></div>
-      <div class="hudbox"><div class="label">倍率</div><div class="value"><span id="mult">x1.00</span></div></div>
-      <div class="hudbox"><div class="label">残り</div><div class="value"><span id="time">60.0</span>s</div></div>
+    <div class="wf-controls">
+      <button id="btnStart" class="wf-btn">スタート</button>
+      <button id="btnPause" class="wf-btn" disabled>一時停止</button>
+      <button id="btnReset" class="wf-btn">リセット</button>
+      <button id="btnAnim" class="wf-btn">アニメ: ON</button>
+      <button id="btnSound" class="wf-btn">効果音: ON</button>
 
-      <div class="hudbox wide">
-        <div class="label">フィーバー</div>
-        <div class="bar"><div class="barfill" id="feverFill"></div></div>
-      </div>
+      <span class="wf-spacer"></span>
 
-      <div class="hudbox wide">
-        <div class="label">テーマ</div>
-        <select id="themeSelect" class="select">
-          <option value="default">通常</option>
-          <option value="space">宇宙エネルギー玉</option>
-        </select>
-      </div>
-
-      <button id="btnStart" class="btn">スタート</button>
-      <button id="btnPause" class="btn ghost" disabled>一時停止</button>
-      <button id="btnReset" class="btn ghost">リセット</button>
-      <button id="btnAnim" class="btn ghost" title="ぷるん等のアニメを切替">アニメ: ON</button>
-      <button id="btnSound" class="btn ghost" title="効果音を切替">効果音: ON</button>
+      <label class="wf-label">テーマ</label>
+      <select id="themeSelect" class="wf-select">
+        <option value="default">通常</option>
+        <option value="space">宇宙エネルギー玉</option>
+      </select>
     </div>
   </header>
 
-  <main class="stage stage-mobile">
-    <div class="panel panel-mobile">
-      <div class="canvasWrap" id="canvasWrap">
+  <main class="stage wf-stage">
+    <div class="panel wf-panel">
+      <div class="canvasWrap wf-canvasWrap" id="canvasWrap">
         <canvas id="game" aria-label="game canvas"></canvas>
       </div>
-
-      <details class="hintDetails">
-        <summary>操作説明（タップして開く）</summary>
-        <div class="hint">
-          <div>🖱️/👆 同じ顔を「なぞって」つなげる → 指を離すと消えます（3個以上で成立）。</div>
-          <div>💣 ボムは <b>クリック/タップ</b> で爆発（周囲を消去）します。</div>
-          <div>⌨️ スペース: 一時停止 / R: リセット / A: アニメON/OFF / S: 効果音ON/OFF</div>
-        </div>
-      </details>
     </div>
   </main>
 
-  <div class="buildBadge">BUILD 20260228-230000</div>
+  <footer class="wf-footer">
+    <details class="hintDetails wf-hint">
+      <summary>操作説明（タップして開く）</summary>
+      <div class="hint">
+        <div>🖱️/👆 同じ顔を「なぞって」つなげる → 指を離すと消えます（3個以上で成立）。</div>
+        <div>💣 ボムは <b>クリック/タップ</b> で爆発（周囲を消去）します。</div>
+        <div>⌨️ スペース: 一時停止 / R: リセット / A: アニメON/OFF / S: 効果音ON/OFF</div>
+      </div>
+    </details>
+
+    <div class="buildBadge wf-build">BUILD 20260301-152500</div>
+  </footer>
 
   <script src="game.js"></script>
 </body>
