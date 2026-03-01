@@ -3,48 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>ツムツムv2.4 | BUILD 20260301-152500</title>
+  <title>ツムツムv2.4 | BUILD 20260301-154500</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="wf">
 
   <header class="topbar wf-topbar">
-    <div class="wf-title">ツムツムv2.4</div>
+    <div class="wf-header">
+      <div class="wf-left">
+        <div class="wf-title">ツムツム v2.4</div>
 
-    <div class="wf-hud">
-      <div class="wf-hud-label">スコア</div>
-      <div class="wf-hud-label">ハイスコア</div>
-      <div class="wf-hud-label">コンボ</div>
-      <div class="wf-hud-label">倍率</div>
-      <div class="wf-hud-label">残り</div>
-      <div class="wf-hud-label">フィーバー</div>
+        <div class="wf-hud" aria-label="HUD table">
+          <div class="wf-hud-label">スコア</div>
+          <div class="wf-hud-label">ハイスコア</div>
+          <div class="wf-hud-label">コンボ</div>
+          <div class="wf-hud-label">倍率</div>
+          <div class="wf-hud-label">残り</div>
+          <div class="wf-hud-label">フィーバー</div>
 
-      <div class="wf-hud-box" id="score">0</div>
-      <div class="wf-hud-box" id="hiscore">0</div>
-      <div class="wf-hud-box" id="combo">0</div>
-      <div class="wf-hud-box"><span id="mult">x1.00</span></div>
-      <div class="wf-hud-box"><span id="time">60.0</span>s</div>
-      <div class="wf-hud-box">
-        <div class="wf-fever">
-          <div class="wf-fever-fill" id="feverFill"></div>
+          <div class="wf-hud-box" id="score">0</div>
+          <div class="wf-hud-box" id="hiscore">0</div>
+          <div class="wf-hud-box" id="combo">0</div>
+          <div class="wf-hud-box"><span id="mult">x1.00</span></div>
+          <div class="wf-hud-box"><span id="time">60.0</span>s</div>
+          <div class="wf-hud-box">
+            <div class="wf-fever" aria-label="fever bar">
+              <div class="wf-fever-fill" id="feverFill"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="wf-controls">
-      <button id="btnStart" class="wf-btn">スタート</button>
-      <button id="btnPause" class="wf-btn" disabled>一時停止</button>
-      <button id="btnReset" class="wf-btn">リセット</button>
-      <button id="btnAnim" class="wf-btn">アニメ: ON</button>
-      <button id="btnSound" class="wf-btn">効果音: ON</button>
+      <div class="wf-right">
+        <div class="wf-controls" aria-label="controls">
+          <button id="btnStart" class="wf-btn">スタート</button>
+          <button id="btnPause" class="wf-btn" disabled>一時停止</button>
+          <button id="btnReset" class="wf-btn">リセット</button>
+          <button id="btnAnim" class="wf-btn">アニメ: ON</button>
+          <button id="btnSound" class="wf-btn">効果音: ON</button>
 
-      <span class="wf-spacer"></span>
-
-      <label class="wf-label">テーマ</label>
-      <select id="themeSelect" class="wf-select">
-        <option value="default">通常</option>
-        <option value="space">宇宙エネルギー玉</option>
-      </select>
+          <div class="wf-inline">
+            <span class="wf-label">テーマ</span>
+            <select id="themeSelect" class="wf-select">
+              <option value="default">通常</option>
+              <option value="space">宇宙エネルギー玉</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -66,7 +72,7 @@
       </div>
     </details>
 
-    <div class="buildBadge wf-build">BUILD 20260301-152500</div>
+    <div class="buildBadge wf-build">BUILD 20260301-154500</div>
   </footer>
 
   <script src="game.js"></script>
