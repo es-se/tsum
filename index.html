@@ -1,94 +1,68 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>もどきムズムズ v2.1 mobile layout</title>
-<link rel="stylesheet" href="style.css" />
-
-<!-- ▼ モバイル優先レイアウト上書き（HTMLだけで完結） -->
-<style>
-html,body{
-  margin:0;
-  padding:0;
-  height:100dvh;
-  overflow:hidden;
-}
-
-body{
-  display:flex;
-  flex-direction:column;
-}
-
-.topbar{
-  flex-shrink:0;
-}
-
-.stage{
-  flex:1;
-  display:flex !important;
-  justify-content:center;
-  align-items:center;
-  padding:0 !important;
-  margin:0 !important;
-}
-
-.panel{
-  width:100%;
-  height:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:0 !important;
-  border:none !important;
-  background:none !important;
-}
-
-#game{
-  width:100%;
-  height:100%;
-  max-width:520px;
-  object-fit:contain;
-}
-
-.side{ display:none !important; }
-.hint{ display:none !important; }
-.footer{ display:none !important; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>もどきムズムズ v2.3 mobile | BUILD 20260228-230000</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-
-<header class="topbar">
-  <div class="title">
-    <div class="logo">🌌</div>
-    <div>
-      <div class="name">もどきムズムズ</div>
-      <div class="sub">スマホ最適レイアウト</div>
+  <header class="topbar">
+    <div class="title">
+      <div class="logo">🌌</div>
+      <div>
+        <div class="name">もどきムズムズ v2.3</div>
+        <div class="sub">スマホ優先レイアウト / BUILD 20260228-230000</div>
+      </div>
     </div>
-  </div>
 
-  <div class="hud">
-    <div class="hudbox"><div class="label">スコア</div><div class="value" id="score">0</div></div>
-    <div class="hudbox"><div class="label">ハイスコア</div><div class="value" id="hiscore">0</div></div>
-    <div class="hudbox"><div class="label">コンボ</div><div class="value" id="combo">0</div></div>
-    <div class="hudbox"><div class="label">倍率</div><div class="value"><span id="mult">x1.00</span></div></div>
-    <div class="hudbox"><div class="label">残り</div><div class="value"><span id="time">60.0</span>s</div></div>
+    <div class="hud">
+      <div class="hudbox"><div class="label">スコア</div><div class="value" id="score">0</div></div>
+      <div class="hudbox"><div class="label">ハイスコア</div><div class="value" id="hiscore">0</div></div>
+      <div class="hudbox"><div class="label">コンボ</div><div class="value" id="combo">0</div></div>
+      <div class="hudbox"><div class="label">倍率</div><div class="value"><span id="mult">x1.00</span></div></div>
+      <div class="hudbox"><div class="label">残り</div><div class="value"><span id="time">60.0</span>s</div></div>
 
-    <button id="btnStart" class="btn">スタート</button>
-    <button id="btnPause" class="btn ghost" disabled>一時停止</button>
-    <button id="btnReset" class="btn ghost">リセット</button>
-    <button id="btnAnim" class="btn ghost">アニメ: ON</button>
-    <button id="btnSound" class="btn ghost">効果音: ON</button>
-  </div>
-</header>
+      <div class="hudbox wide">
+        <div class="label">フィーバー</div>
+        <div class="bar"><div class="barfill" id="feverFill"></div></div>
+      </div>
 
-<main class="stage">
-  <div class="panel">
-    <canvas id="game" width="520" height="760"></canvas>
-  </div>
-</main>
+      <div class="hudbox wide">
+        <div class="label">テーマ</div>
+        <select id="themeSelect" class="select">
+          <option value="default">通常</option>
+          <option value="space">宇宙エネルギー玉</option>
+        </select>
+      </div>
 
-<script src="game.js"></script>
+      <button id="btnStart" class="btn">スタート</button>
+      <button id="btnPause" class="btn ghost" disabled>一時停止</button>
+      <button id="btnReset" class="btn ghost">リセット</button>
+      <button id="btnAnim" class="btn ghost" title="ぷるん等のアニメを切替">アニメ: ON</button>
+      <button id="btnSound" class="btn ghost" title="効果音を切替">効果音: ON</button>
+    </div>
+  </header>
+
+  <main class="stage stage-mobile">
+    <div class="panel panel-mobile">
+      <div class="canvasWrap" id="canvasWrap">
+        <canvas id="game" aria-label="game canvas"></canvas>
+      </div>
+
+      <details class="hintDetails">
+        <summary>操作説明（タップして開く）</summary>
+        <div class="hint">
+          <div>🖱️/👆 同じ顔を「なぞって」つなげる → 指を離すと消えます（3個以上で成立）。</div>
+          <div>💣 ボムは <b>クリック/タップ</b> で爆発（周囲を消去）します。</div>
+          <div>⌨️ スペース: 一時停止 / R: リセット / A: アニメON/OFF / S: 効果音ON/OFF</div>
+        </div>
+      </details>
+    </div>
+  </main>
+
+  <div class="buildBadge">BUILD 20260228-230000</div>
+
+  <script src="game.js"></script>
 </body>
 </html>

@@ -33,6 +33,8 @@
   const ctx = canvas.getContext('2d');
 
   let currentDpr = 1;
+  let cssCanvasW = 520;
+  let cssCanvasH = 760;
 
   const elScore = document.getElementById('score');
   const elHiscore = document.getElementById('hiscore');
@@ -186,44 +188,47 @@
   const randi = (a, bInclusive) => Math.floor(rand(a, bInclusive + 1));
   const cellIndex = (c, r) => r * CONFIG.cols + c;
 
-  function fitCanvasToWrap(){
-    // 画面に「必ず収まる」ように、表示領域に合わせてcanvasをリサイズ（比率維持）
+  function fitCanvasToViewport(){
+    // スマホ優先：画面内に盤面が必ず収まるようにcanvasをリサイズ（比率維持）
     const wrap = document.getElementById('canvasWrap') || canvas.parentElement;
-    const rect = wrap.getBoundingClientRect();
+    const topbar = document.querySelector('.topbar');
+    const topH = topbar ? topbar.getBoundingClientRect().height : 0;
 
+    const padding = 20; // stage padding + safety
+    const vh = window.innerHeight; // iOSの動的UIを考慮した実高さ
+    const availH = Math.max(240, Math.floor(vh - topH - padding - 70)); // 70=details分の余裕（閉じてても安全側）
+    const rect = wrap.getBoundingClientRect();
     const availW = Math.max(260, Math.floor(rect.width));
-    const availH = Math.max(260, Math.floor(rect.height));
 
     const aspect = CONFIG.rows / CONFIG.cols; // height / width
-    let cssW = availW;
-    let cssH = Math.floor(cssW * aspect);
-
-    if (cssH > availH){
-      cssH = availH;
-      cssW = Math.floor(cssH / aspect);
+    let w = availW;
+    let h = Math.floor(w * aspect);
+    if (h > availH){
+      h = availH;
+      w = Math.floor(h / aspect);
     }
 
-    // CSS表示サイズ（中央寄せ）
-    canvas.style.width  = cssW + 'px';
-    canvas.style.height = cssH + 'px';
+    cssCanvasW = w;
+    cssCanvasH = h;
 
-    // 内部解像度（Retina対応）
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+
     const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
     currentDpr = dpr;
-    canvas.width  = Math.floor(cssW * dpr);
-    canvas.height = Math.floor(cssH * dpr);
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
 
-    // 描画座標はCSSピクセル基準
+    // 以降の描画はCSSピクセル座標で行い、内部でdpr倍される
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // 盤面メトリクス更新
     resizeMetrics();
   }
 
 
   function resizeMetrics(){
-    const w = canvas.width / currentDpr;
-    const h = canvas.height / currentDpr;
+    const w = cssCanvasW;
+    const h = cssCanvasH;
     cellW = w / CONFIG.cols;
     cellH = h / CONFIG.rows;
     radius = Math.min(cellW, cellH) * 0.46;
@@ -289,6 +294,7 @@
   }
 
   function startGame(){
+    fitCanvasToViewport();
     resetGame();
     running = true;
     paused = false;
@@ -965,7 +971,7 @@
   }
 
   // ---- Init ----
-  fitCanvasToWrap();
+  fitCanvasToViewport();
   resetGame();
   updateToggleButtons();
   requestAnimationFrame(loop);
@@ -974,11 +980,11 @@
   window.addEventListener('resize', () => {
     window.clearTimeout(window.__mm_resizeT);
     window.__mm_resizeT = window.setTimeout(() => {
-      fitCanvasToWrap();
+      fitCanvasToViewport();
     }, 120);
   });
   window.addEventListener('orientationchange', () => {
-    window.setTimeout(() => fitCanvasToWrap(), 240);
+    window.setTimeout(() => fitCanvasToViewport(), 240);
   });
 
 })();
