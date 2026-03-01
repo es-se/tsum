@@ -969,10 +969,18 @@ function fitCanvasToScreen(){
     requestAnimationFrame(loop);
   }
 
-  // ---- Init ----
-  resizeMetrics();
-  resetGame();
-  updateToggleButtons();
-  requestAnimationFrame(loop);
+// ---- Init ----
+fitCanvasToScreen();
+resetGame();
+updateToggleButtons();
+requestAnimationFrame(loop);
+
+// 画面回転・アドレスバー変動に追従
+window.addEventListener('resize', () => {
+  fitCanvasToScreen();
+});
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => fitCanvasToScreen(), 200);
+});
 
 })();
