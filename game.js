@@ -1,3 +1,4 @@
+/* BUILD 20260301-161800 : wireframe px-lock + robust pointer scaling */
 /* BUILD 20260301-160800 : touch coordinate fix for iPhone */
 // もどきムズムズ v2.1
 // v2機能を維持したまま、テーマ切替（🌌宇宙エネルギー玉）を追加
@@ -204,23 +205,27 @@
       const r = wrap.getBoundingClientRect();
       const w = Math.max(260, Math.floor(r.width));
       const h = Math.max(260, Math.floor(r.height));
+
+      // CSS表示サイズを「pxで固定」（%指定によるズレを排除）
+      canvas.style.setProperty('width',  w + 'px', 'important');
+      canvas.style.setProperty('height', h + 'px', 'important');
+
       cssCanvasW = w;
       cssCanvasH = h;
 
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-
       const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
       currentDpr = dpr;
-      canvas.width = Math.floor(w * dpr);
+      canvas.width  = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
+
+      // 描画はCSSピクセル座標で行う
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       resizeMetrics();
       return;
     }
 
-    const vh = window.innerHeight; // iOSの動的UIを考慮した実高さ
+const vh = window.innerHeight; // iOSの動的UIを考慮した実高さ
     const availH = Math.max(240, Math.floor(vh - topH - padding - 70)); // 70=details分の余裕（閉じてても安全側）
     const rect = wrap.getBoundingClientRect();
     const availW = Math.max(260, Math.floor(rect.width));
@@ -366,10 +371,12 @@
   // ---- Input ----
   function getPointerPos(evt){
     const rect = canvas.getBoundingClientRect();
-    const sx = cssCanvasW / rect.width;
-    const sy = cssCanvasH / rect.height;
+    const w = canvas.width / currentDpr;
+    const h = canvas.height / currentDpr;
+    const sx = w / rect.width;
+    const sy = h / rect.height;
     const x = (evt.clientX - rect.left) * sx;
-    const y = (evt.clientY - rect.top) * sy;
+    const y = (evt.clientY - rect.top)  * sy;
     return {x, y};
   }
 
@@ -994,8 +1001,29 @@
     update(dt, ts);
     render(dt, ts);
 
-    requestAnimationFrame(loop);
+    if (DEBUG_OVERLAY){
+    const r = canvas.getBoundingClientRect();
+    dbg.textContent = `rect ${Math.round(r.width)}x${Math.round(r.height)}
+`+
+      `css ${Math.round(cssCanvasW)}x${Math.round(cssCanvasH)} dpr ${currentDpr}
+`+
+      `canvas ${canvas.width}x${canvas.height}`;
   }
+  requestAnimationFrame(loop);
+  }
+
+
+  // ---- Debug overlay (press D) ----
+  let DEBUG_OVERLAY = false;
+  const dbg = document.createElement('div');
+  dbg.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99999;background:#fff;border:2px solid #000;padding:6px 8px;font:12px/1.3 monospace;white-space:pre;display:none;';
+  document.addEventListener('keydown', (e) => {
+    if (String(e.key).toLowerCase() === 'd'){
+      DEBUG_OVERLAY = !DEBUG_OVERLAY;
+      dbg.style.display = DEBUG_OVERLAY ? 'block' : 'none';
+      if (DEBUG_OVERLAY && !dbg.parentElement){ document.body.appendChild(dbg); }
+    }
+  });
 
   // ---- Init ----
   fitCanvasToViewport();
