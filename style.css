@@ -167,6 +167,68 @@ body{
 
 
 /* ---- v2.3 Mobile-first overrides (BUILD 20260228-230000) ---- */
+/* ---- v2.3 HUD compact (mobile) ---- */
+@media (max-width: 520px){
+  /* 上の帯を薄く */
+  .topbar{
+    padding: 8px 10px !important;
+    gap: 8px !important;
+  }
+
+  /* タイトル部分をコンパクトに（左の主張を弱める） */
+  .title{
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  .title .logo{
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+  }
+  .title .name{
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+  }
+  .title .sub{
+    font-size: 11px !important;
+    opacity: .75 !important;
+  }
+
+  /* HUDを“詰めて2段”にし、カードを小さく */
+  .hud{
+    gap: 8px !important;
+  }
+  .hudbox{
+    padding: 10px 12px !important;
+    min-width: 120px !important;
+  }
+  .hudbox .label{
+    font-size: 11px !important;
+  }
+  .hudbox .value{
+    font-size: 18px !important;
+  }
+  .hudbox.wide{
+    min-width: 200px !important;
+  }
+
+  /* ボタンの主張を弱めて省スペース */
+  .btn{
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    font-weight: 800 !important;
+  }
+  .btn.ghost{
+    opacity: .9 !important;
+  }
+
+  /* “BUILDバッジ”が下の操作を邪魔するなら少し薄く */
+  .buildBadge{
+    font-size: 11px !important;
+    padding: 5px 9px !important;
+    opacity: .8 !important;
+  }
+}
 html,body{
   height:100vh;
   height:100dvh;
