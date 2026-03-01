@@ -581,3 +581,22 @@ body.wf #game{
   .wf-hud-box:nth-child(3n){ border-right:none !important; }
   .wf-canvasWrap{ height:calc(100dvh - 270px) !important; }
 }
+
+
+/* ==== v2.4.1 touch fix (BUILD 20260301-160000) ==== */
+/* iOSで「なぞり」がスクロール扱いになって死ぬのを防ぐ */
+body.wf {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+/* canvas操作をOSジェスチャより優先 */
+#game {
+  touch-action: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+/* iOS Safariが指操作をページ側に取る場合の保険（盤面ラッパー） */
+#canvasWrap {
+  touch-action: none !important;
+}
