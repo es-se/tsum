@@ -1,3 +1,4 @@
+/* BUILD 20260301-160800 : touch coordinate fix for iPhone */
 // もどきムズムズ v2.1
 // v2機能を維持したまま、テーマ切替（🌌宇宙エネルギー玉）を追加
 (() => {
@@ -195,6 +196,30 @@
     const topH = topbar ? topbar.getBoundingClientRect().height : 0;
 
     const padding = 20; // stage padding + safety
+
+    // ワイヤーフレームUI（body.wf）ではCSSがcanvasを100%に伸縮するため、
+    // ここで「実際の表示サイズ」に合わせて内部解像度と座標系を一致させる。
+    const isWireframe = document.body && document.body.classList.contains('wf');
+    if (isWireframe){
+      const r = wrap.getBoundingClientRect();
+      const w = Math.max(260, Math.floor(r.width));
+      const h = Math.max(260, Math.floor(r.height));
+      cssCanvasW = w;
+      cssCanvasH = h;
+
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      currentDpr = dpr;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      resizeMetrics();
+      return;
+    }
+
     const vh = window.innerHeight; // iOSの動的UIを考慮した実高さ
     const availH = Math.max(240, Math.floor(vh - topH - padding - 70)); // 70=details分の余裕（閉じてても安全側）
     const rect = wrap.getBoundingClientRect();
@@ -341,8 +366,10 @@
   // ---- Input ----
   function getPointerPos(evt){
     const rect = canvas.getBoundingClientRect();
-    const x = (evt.clientX - rect.left);
-    const y = (evt.clientY - rect.top);
+    const sx = cssCanvasW / rect.width;
+    const sy = cssCanvasH / rect.height;
+    const x = (evt.clientX - rect.left) * sx;
+    const y = (evt.clientY - rect.top) * sy;
     return {x, y};
   }
 
