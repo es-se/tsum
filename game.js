@@ -32,6 +32,8 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
 
+  let currentDpr = 1;
+
   const elScore = document.getElementById('score');
   const elHiscore = document.getElementById('hiscore');
   const elCombo = document.getElementById('combo');
@@ -184,55 +186,48 @@
   const randi = (a, bInclusive) => Math.floor(rand(a, bInclusive + 1));
   const cellIndex = (c, r) => r * CONFIG.cols + c;
 
-function fitCanvasToScreen(){
-  // 画面に「見えている高さ」を使う（iOSアドレスバー対策）
-  const vh = window.innerHeight;
+  function fitCanvasToWrap(){
+    // 画面に「必ず収まる」ように、表示領域に合わせてcanvasをリサイズ（比率維持）
+    const wrap = document.getElementById('canvasWrap') || canvas.parentElement;
+    const rect = wrap.getBoundingClientRect();
 
-  const header = document.querySelector('.topbar');
-  const hint   = document.querySelector('.hint');
-  const footer = document.querySelector('.footer');
+    const availW = Math.max(260, Math.floor(rect.width));
+    const availH = Math.max(260, Math.floor(rect.height));
 
-  const headerH = header ? header.getBoundingClientRect().height : 0;
-  const hintH   = hint   ? hint.getBoundingClientRect().height   : 0;
-  const footerH = footer ? footer.getBoundingClientRect().height : 0;
+    const aspect = CONFIG.rows / CONFIG.cols; // height / width
+    let cssW = availW;
+    let cssH = Math.floor(cssW * aspect);
 
-  // 余白（適宜）
-  const margin = 24; // 上下の余白ぶん
+    if (cssH > availH){
+      cssH = availH;
+      cssW = Math.floor(cssH / aspect);
+    }
 
-  // canvasに割り当てられる高さ（最低値を確保）
-  const availH = Math.max(320, Math.floor(vh - headerH - hintH - footerH - margin));
+    // CSS表示サイズ（中央寄せ）
+    canvas.style.width  = cssW + 'px';
+    canvas.style.height = cssH + 'px';
 
-  // 幅はパネルに合わせる（＝画面幅に追従）
-  const panel = document.querySelector('.panel');
-  const panelW = panel ? panel.getBoundingClientRect().width : canvas.getBoundingClientRect().width;
-  const availW = Math.max(320, Math.floor(panelW - 2)); // 端数対策
+    // 内部解像度（Retina対応）
+    const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    currentDpr = dpr;
+    canvas.width  = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
 
-  // 盤面の縦横比は「行/列」に合わせる（セルを正方形に近づける）
-  const targetAspect = CONFIG.rows / CONFIG.cols; // 高さ/幅
-  let cssW = availW;
-  let cssH = Math.floor(cssW * targetAspect);
+    // 描画座標はCSSピクセル基準
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  // 高さが足りないなら、高さ優先で縮める
-  if (cssH > availH){
-    cssH = availH;
-    cssW = Math.floor(cssH / targetAspect);
+    // 盤面メトリクス更新
+    resizeMetrics();
   }
 
-  // CSS表示サイズ
-  canvas.style.width  = cssW + 'px';
-  canvas.style.height = cssH + 'px';
 
-  // 内部解像度（Retina対応）
-  const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-  canvas.width  = Math.floor(cssW * dpr);
-  canvas.height = Math.floor(cssH * dpr);
-
-  // 以後の描画座標をCSSピクセル基準に合わせる
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  // 盤面メトリクス更新
-  resizeMetrics();
-}
+  function resizeMetrics(){
+    const w = canvas.width / currentDpr;
+    const h = canvas.height / currentDpr;
+    cellW = w / CONFIG.cols;
+    cellH = h / CONFIG.rows;
+    radius = Math.min(cellW, cellH) * 0.46;
+  }
 
   function mkPiece(type){
     return { k:'n', t: type, y: 0, vy: 0, pop: 0, id: uid++ };
@@ -340,8 +335,8 @@ function fitCanvasToScreen(){
   // ---- Input ----
   function getPointerPos(evt){
     const rect = canvas.getBoundingClientRect();
-    const x = (evt.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (evt.clientY - rect.top)  * (canvas.height / rect.height);
+    const x = (evt.clientX - rect.left);
+    const y = (evt.clientY - rect.top);
     return {x, y};
   }
 
@@ -969,18 +964,21 @@ function fitCanvasToScreen(){
     requestAnimationFrame(loop);
   }
 
-// ---- Init ----
-fitCanvasToScreen();
-resetGame();
-updateToggleButtons();
-requestAnimationFrame(loop);
+  // ---- Init ----
+  fitCanvasToWrap();
+  resetGame();
+  updateToggleButtons();
+  requestAnimationFrame(loop);
 
-// 画面回転・アドレスバー変動に追従
-window.addEventListener('resize', () => {
-  fitCanvasToScreen();
-});
-window.addEventListener('orientationchange', () => {
-  setTimeout(() => fitCanvasToScreen(), 200);
-});
+  // 画面回転/アドレスバー変動/リサイズに追従
+  window.addEventListener('resize', () => {
+    window.clearTimeout(window.__mm_resizeT);
+    window.__mm_resizeT = window.setTimeout(() => {
+      fitCanvasToWrap();
+    }, 120);
+  });
+  window.addEventListener('orientationchange', () => {
+    window.setTimeout(() => fitCanvasToWrap(), 240);
+  });
 
 })();

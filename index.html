@@ -64,24 +64,19 @@
 
   <main class="stage">
     <div class="panel">
-      <canvas id="game" width="520" height="760" aria-label="game canvas"></canvas>
-      <div class="hint">
-        <div>🖱️/👆 同じ顔を「なぞって」つなげる → 指を離すと消えます（3個以上で成立）。</div>
-        <div>💣 ボムは <b>クリック/タップ</b> で爆発（周囲を消去）します。</div>
-        <div>⌨️ スペース: 一時停止 / R: リセット / A: アニメON/OFF / S: 効果音ON/OFF</div>
+      <div class="canvasWrap" id="canvasWrap">
+        <canvas id="game" width="520" height="760" aria-label="game canvas"></canvas>
       </div>
-    </div>
 
-    <aside class="side">
-      <section class="card">
-        <h2>変更点（v2.1）</h2>
-        <ul>
-          <li>テーマ切替を追加（通常 / 🌌宇宙エネルギー玉）</li>
-          <li>v2の機能（ボム/フィーバー/効果音/倍率UI/ハイスコア/アニメ切替）を維持</li>
-          <li>テーマはブラウザに保存されます</li>
-        </ul>
-      </section>
-    </aside>
+      <details class="hintDetails">
+        <summary>操作説明（タップして開く）</summary>
+        <div class="hint">
+          <div>🖱️/👆 同じ顔を「なぞって」つなげる → 指を離すと消えます（3個以上で成立）。</div>
+          <div>💣 ボムは <b>クリック/タップ</b> で爆発（周囲を消去）します。</div>
+          <div>⌨️ スペース: 一時停止 / R: リセット / A: アニメON/OFF / S: 効果音ON/OFF</div>
+        </div>
+      </details>
+    </div>
   </main>
 
   <footer class="footer">
