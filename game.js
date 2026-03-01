@@ -184,11 +184,55 @@
   const randi = (a, bInclusive) => Math.floor(rand(a, bInclusive + 1));
   const cellIndex = (c, r) => r * CONFIG.cols + c;
 
-  function resizeMetrics(){
-    cellW = canvas.width / CONFIG.cols;
-    cellH = canvas.height / CONFIG.rows;
-    radius = Math.min(cellW, cellH) * 0.46;
+function fitCanvasToScreen(){
+  // 画面に「見えている高さ」を使う（iOSアドレスバー対策）
+  const vh = window.innerHeight;
+
+  const header = document.querySelector('.topbar');
+  const hint   = document.querySelector('.hint');
+  const footer = document.querySelector('.footer');
+
+  const headerH = header ? header.getBoundingClientRect().height : 0;
+  const hintH   = hint   ? hint.getBoundingClientRect().height   : 0;
+  const footerH = footer ? footer.getBoundingClientRect().height : 0;
+
+  // 余白（適宜）
+  const margin = 24; // 上下の余白ぶん
+
+  // canvasに割り当てられる高さ（最低値を確保）
+  const availH = Math.max(320, Math.floor(vh - headerH - hintH - footerH - margin));
+
+  // 幅はパネルに合わせる（＝画面幅に追従）
+  const panel = document.querySelector('.panel');
+  const panelW = panel ? panel.getBoundingClientRect().width : canvas.getBoundingClientRect().width;
+  const availW = Math.max(320, Math.floor(panelW - 2)); // 端数対策
+
+  // 盤面の縦横比は「行/列」に合わせる（セルを正方形に近づける）
+  const targetAspect = CONFIG.rows / CONFIG.cols; // 高さ/幅
+  let cssW = availW;
+  let cssH = Math.floor(cssW * targetAspect);
+
+  // 高さが足りないなら、高さ優先で縮める
+  if (cssH > availH){
+    cssH = availH;
+    cssW = Math.floor(cssH / targetAspect);
   }
+
+  // CSS表示サイズ
+  canvas.style.width  = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+
+  // 内部解像度（Retina対応）
+  const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+  canvas.width  = Math.floor(cssW * dpr);
+  canvas.height = Math.floor(cssH * dpr);
+
+  // 以後の描画座標をCSSピクセル基準に合わせる
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // 盤面メトリクス更新
+  resizeMetrics();
+}
 
   function mkPiece(type){
     return { k:'n', t: type, y: 0, vy: 0, pop: 0, id: uid++ };
